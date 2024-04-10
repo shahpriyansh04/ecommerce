@@ -2,12 +2,14 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
-  messages: defineTable({
-    body: v.string(),
-    user: v.id("users"),
-  }),
-  users: defineTable({
+  products: defineTable({
     name: v.string(),
-    tokenIdentifier: v.string(),
-  }).index("by_token", ["tokenIdentifier"]),
+    price: v.number(),
+    stock: v.number(),
+    description: v.string(),
+    media: v.array(v.string()),
+    isArchived: v.boolean(),
+    createdAt: v.string(),
+    userId: v.string(),
+  }),
 });

@@ -5,6 +5,7 @@ import "./globals.css";
 import { ClerkProvider, useAuth } from "@clerk/nextjs";
 import { ConvexReactClient } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
+import { ThemeProvider } from "@/lib/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,8 +21,15 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-        <html lang="en" className="dark">
+        <html lang="en" className="">
+          {/* <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          > */}
           <body className={inter.className}>{children}</body>
+          {/* </ThemeProvider> */}
         </html>
       </ConvexProviderWithClerk>
     </ClerkProvider>
