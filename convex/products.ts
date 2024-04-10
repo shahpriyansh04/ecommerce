@@ -8,6 +8,8 @@ export const createProduct = mutation({
     stock: v.number(),
     description: v.string(),
     media: v.array(v.string()),
+    category: v.string(),
+    subcategory: v.optional(v.string()),
   },
   async handler(ctx, args) {
     const identity = await ctx.auth.getUserIdentity();

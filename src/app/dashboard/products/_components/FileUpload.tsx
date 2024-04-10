@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import ProgressBar from "@/components/ui/progress";
+import { Progress } from "@/components/ui/progress";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { uploadFiles } from "@xixixao/uploadstuff";
 import { useMutation } from "convex/react";
@@ -34,8 +34,14 @@ const ImageColor = {
   fillColor: "fill-purple-600",
 };
 
-export default function FileUpload() {
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+export default function FileUpload({
+  setMedia,
+}: Readonly<{
+  setMedia: (media: string[]) => void;
+}>) {
+  const [uploadedFiles, setUploadedFiles] = useState<
+    { progress: number; File: File }[]
+  >([]);
   const [filesToUpload, setFilesToUpload] = useState<FileUploadProgress[]>([]);
   console.log(filesToUpload);
 
@@ -54,7 +60,7 @@ export default function FileUpload() {
     });
 
     setUploadedFiles((prevUploadedFiles) => {
-      return prevUploadedFiles.filter((item) => item !== file);
+      return prevUploadedFiles.filter((item) => item.File !== file);
     });
   };
 
@@ -75,6 +81,7 @@ export default function FileUpload() {
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
   const generateUploadUrl = useMutation(api.files.generateUploadUrl);
+  const [uploadProgress, setUploadProgress] = useState({});
   const uploadFile = async () => {
     // Generate a URL for each file
     const urls = await Promise.all(
@@ -90,10 +97,27 @@ export default function FileUpload() {
       return uploadFiles({
         files: [filesToUpload[index].File],
         url,
+        onUploadProgress: ({ progress }) => {
+          setUploadProgress((prevProgress) => ({
+            ...prevProgress,
+            [filesToUpload[index].File.name]: progress,
+          }));
+          setUploadedFiles((prevUploadedFiles) => {
+            return [...prevUploadedFiles, ...filesToUpload];
+          });
+        },
       });
     });
 
-    await Promise.all(uploadPromises);
+    const uploadResults = await Promise.all(uploadPromises);
+
+    const imageIds = uploadResults.flatMap((result) =>
+      //@ts-ignore
+      result.map((r) => r.response.storageId)
+    );
+
+    setMedia(imageIds);
+    setUploadProgress({});
 
     const successfulUploads = await Promise.allSettled(uploadPromises);
     setFilesToUpload(
@@ -102,6 +126,7 @@ export default function FileUpload() {
       )
     );
   };
+  console.log(uploadedFiles);
 
   return (
     <div>
@@ -144,9 +169,9 @@ export default function FileUpload() {
                 return (
                   <div
                     key={fileUploadProgress.File.lastModified}
-                    className="flex items-center"
+                    className="flex flex-col"
                   >
-                    <div className="flex items-center p-2">
+                    <div className="flex flex-col items-center py-2">
                       <div className="text-white relative">
                         <div className="w-40 h-40">
                           <img
@@ -160,6 +185,11 @@ export default function FileUpload() {
                           className="w-5 h-5  p-1 bg-red-500 rounded-full  absolute -top-2 -right-2"
                         />
                       </div>
+                      <Progress
+                        //@ts-ignore
+                        value={uploadProgress[fileUploadProgress.File.name]}
+                        className="mt-4 w-40 h-2"
+                      />
                     </div>
                   </div>
                 );
@@ -175,24 +205,24 @@ export default function FileUpload() {
           <p className="font-medium my-2 mt-6 text-muted-foreground text-sm">
             Uploaded Files
           </p>
-          <div className="space-y-2 pr-3">
+          <div className=" flex gap-3">
             {uploadedFiles.map((file) => {
               return (
                 <div
-                  key={file.lastModified}
-                  className="flex justify-between gap-2 rounded-lg overflow-hidden border border-slate-100 group hover:pr-0 pr-2 hover:border-slate-300 transition-all"
+                  key={file?.File?.lastModified}
+                  className="flex justify-between gap-2 rounded-lg overflow-hidden border border-slate-100 group  hover:border-slate-300 transition-all"
                 >
                   <div className="flex items-center flex-1 p-2">
                     <div className="text-white relative">
                       <img
-                        src={URL.createObjectURL(file)}
+                        src={URL.createObjectURL(file.File)}
                         alt=""
                         className="w-10 h-10"
                       />
-                      <X
-                        onClick={() => removeFile(file)}
+                      {/* <X
+                        onClick={() => removeFile(file.File)}
                         className="w-2 h-2 text-black absolute top-0 right-0"
-                      />
+                      /> */}
                     </div>
                   </div>
                 </div>
@@ -201,7 +231,13 @@ export default function FileUpload() {
           </div>
         </div>
       )}
-      <Button onClick={uploadFile}>Upload</Button>
+      <Button
+        onClick={uploadFile}
+        className="w-full mt-4"
+        variant={"secondary"}
+      >
+        Upload
+      </Button>
     </div>
   );
 }

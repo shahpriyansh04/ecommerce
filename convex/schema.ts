@@ -11,5 +11,7 @@ export default defineSchema({
     isArchived: v.boolean(),
     createdAt: v.string(),
     userId: v.string(),
+    category: v.string(),
+    subcategory: v.optional(v.string()),
   }),
 });

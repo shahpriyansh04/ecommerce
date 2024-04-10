@@ -6,7 +6,7 @@ import { ClerkProvider, useAuth } from "@clerk/nextjs";
 import { ConvexReactClient } from "convex/react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
 import { ThemeProvider } from "@/lib/theme-provider";
-
+import { Toaster } from "sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 const convex = new ConvexReactClient(
@@ -28,7 +28,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           > */}
-          <body className={inter.className}>{children}</body>
+          <body className={inter.className}>
+            {children}
+            <Toaster />
+          </body>
           {/* </ThemeProvider> */}
         </html>
       </ConvexProviderWithClerk>

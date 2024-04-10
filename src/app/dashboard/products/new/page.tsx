@@ -27,12 +27,15 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "convex/react";
-import { Upload } from "lucide-react";
+import { Loader2Icon, LoaderCircle, LoaderIcon, Upload } from "lucide-react";
 import Image from "next/image";
 import { api } from "../../../../../convex/_generated/api";
 import { useForm, Controller } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import FileUpload from "../_components/FileUpload";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface Product {
   name: string;
@@ -48,11 +51,22 @@ export default function NewProduct() {
   const { register, control, watch } = useForm<Product>();
   const createProduct = useMutation(api.products.createProduct);
   const watchAllFields = watch();
-  useEffect(() => {
-    console.log(watchAllFields);
-  }, [watchAllFields]);
-
-  // console.log(watchAllFields);
+  const [loading, setLoading] = useState(false);
+  const [media, setMedia] = useState<string[]>([]);
+  console.log(watchAllFields);
+  const router = useRouter();
+  const handleCreateProduct = async () => {
+    setLoading(true);
+    const product = createProduct({ ...watchAllFields, media });
+    console.log(product);
+    setLoading(false);
+    toast.promise(product, {
+      loading: "Creating product...",
+      success: "Product created successfully",
+      error: "Failed to create product",
+    });
+    router.push("/dashboard/products");
+  };
 
   return (
     <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
@@ -109,7 +123,7 @@ export default function NewProduct() {
                         <Input
                           id="stock-1"
                           type="number"
-                          {...register("stock")}
+                          {...register("stock", { valueAsNumber: true })}
                         />
                       </TableCell>
                       <TableCell>
@@ -118,7 +132,7 @@ export default function NewProduct() {
                         </Label>
                         <Input
                           id="price-1"
-                          {...register("price")}
+                          {...register("price", { valueAsNumber: true })}
                           type="number"
                         />
                       </TableCell>
@@ -233,26 +247,17 @@ export default function NewProduct() {
               </CardHeader>
               <CardContent className="grid gap-4">
                 <div className="w-80 whitespace-nowrap">
-                  <FileUpload />
+                  <FileUpload setMedia={setMedia} />
                 </div>
               </CardContent>
             </Card>
             <Button
-              // onClick={async () => {
-              //   const doc = await createProduct({
-              //     description: "Hello",
-              //     media: ["1"],
-              //     name: "Hello",
-              //     price: 1,
-              //     stock: 1,
-              //   });
-              //   console.log(doc);
-              // }}
-
-              onClick={() => {
-                console.log(watchAllFields);
-              }}
+              className={cn("w-full", loading && "opacity-50")}
+              onClick={handleCreateProduct}
             >
+              {loading && (
+                <LoaderCircle className="w-5 h-5 animate-spin mr-4" />
+              )}
               Create Product
             </Button>
           </div>
