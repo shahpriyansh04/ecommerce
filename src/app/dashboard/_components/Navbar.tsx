@@ -37,10 +37,10 @@ export default function Navbar() {
     segment = segment.charAt(0).toUpperCase() + segment.slice(1);
 
     return (
-      <>
+      <React.Fragment key={href}>
         <BreadcrumbItem className="text-lg">
           {!isCurrentPage ? (
-            <BreadcrumbLink asChild key={href}>
+            <BreadcrumbLink asChild>
               <Link href={href} className={isCurrentPage ? "text-primary" : ""}>
                 {segment}
               </Link>
@@ -50,7 +50,7 @@ export default function Navbar() {
           )}
         </BreadcrumbItem>
         {index < pathSegments.length - 1 && <BreadcrumbSeparator />}
-      </>
+      </React.Fragment>
     );
   });
   return (
@@ -104,7 +104,7 @@ export default function Navbar() {
         </SheetContent>
       </Sheet>
       <Breadcrumb className="hidden md:flex">
-        <BreadcrumbList>{breadcrumbItems}</BreadcrumbList>
+        <BreadcrumbList key="1">{breadcrumbItems}</BreadcrumbList>
       </Breadcrumb>
       <div className="relative ml-auto flex-1 md:grow-0">
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />

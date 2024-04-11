@@ -39,7 +39,24 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import Link from "next/link";
-export default function Products() {
+import { useQuery } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
+import { ConvexHttpClient } from "convex/browser";
+import { currentUser } from "@clerk/nextjs";
+import { revalidatePath } from "next/cache";
+import { unstable_noStore as noStore } from "next/cache";
+
+export default async function Products() {
+  noStore();
+  // const products = useQuery(api.products.getProducts, {});
+  // console.log(products);
+  const user = await currentUser();
+
+  const client = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+  const products = await client.query(api.products.getProducts, {
+    userId: user?.id,
+  });
+
   return (
     <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
       <Tabs defaultValue="all">
@@ -109,7 +126,7 @@ export default function Products() {
                       Price
                     </TableHead>
                     <TableHead className="hidden md:table-cell">
-                      Total Sales
+                      Total Stock
                     </TableHead>
                     <TableHead className="hidden md:table-cell">
                       Created at
@@ -120,17 +137,19 @@ export default function Products() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  <ProductTableItem />
-                  <ProductTableItem />
-                  <ProductTableItem />
-                  <ProductTableItem />
-                  <ProductTableItem />
+                  {products?.map((product) => {
+                    return <ProductTableItem {...product} key={product._id} />;
+                  })}
                 </TableBody>
               </Table>
             </CardContent>
             <CardFooter className="flex flex-col gap-12">
               <div className="text-xs text-muted-foreground">
-                Showing <strong>1-10</strong> of <strong>32</strong> products
+                Showing{" "}
+                <strong>
+                  {products.length > 10 ? "1-10" : `1-${products.length}`}
+                </strong>{" "}
+                of <strong>{products.length}</strong> products{" "}
               </div>
               <Pagination>
                 <PaginationContent>

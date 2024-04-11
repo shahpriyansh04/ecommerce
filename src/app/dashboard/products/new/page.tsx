@@ -36,6 +36,7 @@ import FileUpload from "../_components/FileUpload";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 interface Product {
   name: string;
@@ -48,7 +49,7 @@ interface Product {
 }
 
 export default function NewProduct() {
-  const { register, control, watch } = useForm<Product>();
+  const { register, control, watch, reset } = useForm<Product>();
   const createProduct = useMutation(api.products.createProduct);
   const watchAllFields = watch();
   const [loading, setLoading] = useState(false);
@@ -59,12 +60,14 @@ export default function NewProduct() {
     setLoading(true);
     const product = createProduct({ ...watchAllFields, media });
     console.log(product);
+    reset();
     setLoading(false);
     toast.promise(product, {
       loading: "Creating product...",
       success: "Product created successfully",
       error: "Failed to create product",
     });
+    await fetch("/dashboard/products/api");
     router.push("/dashboard/products");
   };
 
