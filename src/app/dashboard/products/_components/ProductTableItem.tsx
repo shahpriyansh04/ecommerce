@@ -12,15 +12,18 @@ import { WithoutSystemFields } from "convex/server";
 import { MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import React from "react";
-import { Doc } from "../../../../../convex/_generated/dataModel";
+import { Doc, Id } from "../../../../../convex/_generated/dataModel";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../../../../convex/_generated/api";
+import revalidateUserPath from "../action";
+import ProductTableItemDropdown from "./ProductTableItemDropdown";
 
 export default async function ProductTableItem(product: Doc<"products">) {
   const client = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
   const url = await client.query(api.files.getFileUrls, {
     media: product.media,
   });
+
   return (
     <TableRow>
       <TableCell className="hidden sm:table-cell">
@@ -42,19 +45,7 @@ export default async function ProductTableItem(product: Doc<"products">) {
         {new Date(product.createdAt).toLocaleDateString()}
       </TableCell>
       <TableCell>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button aria-haspopup="true" size="icon" variant="ghost">
-              <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Toggle menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Edit</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <ProductTableItemDropdown id={product._id as Id<"products">} />
       </TableCell>
     </TableRow>
   );

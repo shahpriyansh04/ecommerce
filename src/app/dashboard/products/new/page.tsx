@@ -37,6 +37,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { revalidatePath, revalidateTag } from "next/cache";
+import revalidateUserPath from "../action";
 
 interface Product {
   name: string;
@@ -46,6 +47,7 @@ interface Product {
   media: string[];
   category: string;
   subcategory: string;
+  status: "draft" | "active" | "archived";
 }
 
 export default function NewProduct() {
@@ -54,12 +56,10 @@ export default function NewProduct() {
   const watchAllFields = watch();
   const [loading, setLoading] = useState(false);
   const [media, setMedia] = useState<string[]>([]);
-  console.log(watchAllFields);
   const router = useRouter();
   const handleCreateProduct = async () => {
     setLoading(true);
     const product = createProduct({ ...watchAllFields, media });
-    console.log(product);
     reset();
     setLoading(false);
     toast.promise(product, {
@@ -67,8 +67,10 @@ export default function NewProduct() {
       success: "Product created successfully",
       error: "Failed to create product",
     });
-    await fetch("/dashboard/products/api");
-    router.push("/dashboard/products");
+
+    revalidateUserPath().then(() => {
+      router.push("/dashboard/products");
+    });
   };
 
   return (
@@ -227,16 +229,29 @@ export default function NewProduct() {
                 <div className="grid gap-6">
                   <div className="grid gap-3">
                     <Label htmlFor="status">Status</Label>
-                    <Select>
-                      <SelectTrigger id="status" aria-label="Select status">
-                        <SelectValue placeholder="Select status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="draft">Draft</SelectItem>
-                        <SelectItem value="published">Active</SelectItem>
-                        <SelectItem value="archived">Archived</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Controller
+                      name="status"
+                      control={control}
+                      defaultValue="draft"
+                      render={({ field }) => (
+                        <Select
+                          value={field.value}
+                          onValueChange={(value: string) =>
+                            field.onChange(value)
+                          }
+                          onOpenChange={field.onBlur}
+                        >
+                          <SelectTrigger id="status" aria-label="Select status">
+                            <SelectValue placeholder="Select status" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="draft">Draft</SelectItem>
+                            <SelectItem value="active">Active</SelectItem>
+                            <SelectItem value="archived">Archived</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
                   </div>
                 </div>
               </CardContent>

@@ -27,7 +27,6 @@ export const getFileUrls = query({
         url: await ctx.storage.getUrl(file),
       }))
     );
-    console.log(filesWithUrl);
 
     return filesWithUrl;
   },

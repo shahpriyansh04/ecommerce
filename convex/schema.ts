@@ -13,5 +13,6 @@ export default defineSchema({
     userId: v.string(),
     category: v.string(),
     subcategory: v.optional(v.string()),
+    status: v.string(),
   }),
 });

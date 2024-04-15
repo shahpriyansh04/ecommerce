@@ -12,7 +12,8 @@ const inter = Inter({ subsets: ["latin"] });
 const convex = new ConvexReactClient(
   process.env.NEXT_PUBLIC_CONVEX_URL as string
 );
-
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 export default function RootLayout({
   children,
 }: Readonly<{

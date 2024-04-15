@@ -43,7 +43,6 @@ export default function FileUpload({
     { progress: number; File: File }[]
   >([]);
   const [filesToUpload, setFilesToUpload] = useState<FileUploadProgress[]>([]);
-  console.log(filesToUpload);
 
   const getFileIconAndColor = (file: File) => {
     return {
@@ -87,7 +86,6 @@ export default function FileUpload({
     const urls = await Promise.all(
       filesToUpload.map(async (file) => {
         const url = await generateUploadUrl();
-        console.log(url);
 
         return url;
       })
@@ -126,7 +124,6 @@ export default function FileUpload({
       )
     );
   };
-  console.log(uploadedFiles);
 
   return (
     <div>

@@ -1,61 +1,21 @@
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { File, ListFilter, MoreHorizontal, PlusCircle } from "lucide-react";
-import Image from "next/image";
-import ProductTableItem from "./_components/ProductTableItem";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import { File, ListFilter, PlusCircle } from "lucide-react";
+import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import Link from "next/link";
-import { useQuery } from "convex/react";
-import { api } from "../../../../convex/_generated/api";
-import { ConvexHttpClient } from "convex/browser";
-import { currentUser } from "@clerk/nextjs";
-import { revalidatePath } from "next/cache";
-import { unstable_noStore as noStore } from "next/cache";
+import ProductTable from "./_components/ProductTable";
 
 export default async function Products() {
+  revalidatePath("/dashboard/products", "layout");
   noStore();
-  // const products = useQuery(api.products.getProducts, {});
-  // console.log(products);
-  const user = await currentUser();
-
-  const client = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-  const products = await client.query(api.products.getProducts, {
-    userId: user?.id,
-  });
 
   return (
     <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
@@ -106,77 +66,16 @@ export default async function Products() {
           </div>
         </div>
         <TabsContent value="all">
-          <Card x-chunk="dashboard-06-chunk-0">
-            <CardHeader>
-              <CardTitle>Products</CardTitle>
-              <CardDescription>
-                Manage your products and view their sales performance.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="hidden w-[100px] sm:table-cell">
-                      <span className="sr-only">Image</span>
-                    </TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="hidden md:table-cell">
-                      Price
-                    </TableHead>
-                    <TableHead className="hidden md:table-cell">
-                      Total Stock
-                    </TableHead>
-                    <TableHead className="hidden md:table-cell">
-                      Created at
-                    </TableHead>
-                    <TableHead>
-                      <span className="sr-only">Actions</span>
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {products?.map((product) => {
-                    return <ProductTableItem {...product} key={product._id} />;
-                  })}
-                </TableBody>
-              </Table>
-            </CardContent>
-            <CardFooter className="flex flex-col gap-12">
-              <div className="text-xs text-muted-foreground">
-                Showing{" "}
-                <strong>
-                  {products.length > 10 ? "1-10" : `1-${products.length}`}
-                </strong>{" "}
-                of <strong>{products.length}</strong> products{" "}
-              </div>
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious href="#" />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">1</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#" isActive>
-                      2
-                    </PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">3</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationNext href="#" />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            </CardFooter>
-          </Card>
+          <ProductTable status="all" />
+        </TabsContent>
+        <TabsContent value="active">
+          <ProductTable status="active" />
+        </TabsContent>
+        <TabsContent value="draft">
+          <ProductTable status="draft" />
+        </TabsContent>
+        <TabsContent value="archived">
+          <ProductTable status="archived" />
         </TabsContent>
       </Tabs>
     </main>
