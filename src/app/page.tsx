@@ -1,14 +1,25 @@
-"use client";
-import { SignInButton, UserButton, auth, useUser } from "@clerk/nextjs";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
+import Navbar from "./_components/Navbar";
+import { client } from "@/lib/convex-client";
+import ProductCard from "./_components/ProductCard";
+import revalidateUserPath from "./dashboard/products/action";
 
-export default function Home() {
-  const { user } = useUser();
+export default async function Home() {
+  revalidateUserPath();
+  const products = await client.query(api.products.getProducts, {});
 
   return (
-    <div className="h-screen flex items-center justify-center gap-12">
-      {user ? <UserButton afterSignOutUrl="/login" /> : <SignInButton />}
+    <div className="">
+      <div className="px-20 py-4">
+        <Navbar />
+      </div>
+      <hr />
+      <div className="px-20 py-12 grid grid-cols-4 gap-12">
+        {products.map((product) => {
+          return <ProductCard {...product} key={product._id} />;
+        })}
+      </div>
     </div>
   );
 }

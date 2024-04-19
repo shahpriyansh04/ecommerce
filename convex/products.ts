@@ -108,3 +108,16 @@ export const update = mutation({
     return document;
   },
 });
+
+export const getProducts = query({
+  async handler(ctx, args) {
+    const products = await ctx.db
+      .query("products")
+      .filter((q) => q.eq(q.field("status"), "active"))
+      .order("desc")
+      .collect();
+    console.log(products);
+
+    return products;
+  },
+});
