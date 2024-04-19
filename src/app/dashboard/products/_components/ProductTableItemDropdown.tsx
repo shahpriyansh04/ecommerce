@@ -22,12 +22,10 @@ export default function ProductTableItemDropdown({
 }) {
   const router = useRouter();
   const handleDelete = async () => {
-    const deleteProduct = client.mutation(api.products.deleteProduct, {
+    const deleteProduct = await client.mutation(api.products.deleteProduct, {
       productId: id,
     });
-    revalidateUserPath().then(() => {
-      router.push("/dashboard/products");
-    });
+    revalidateUserPath();
   };
   return (
     <DropdownMenu>

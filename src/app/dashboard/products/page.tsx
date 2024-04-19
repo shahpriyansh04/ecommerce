@@ -9,14 +9,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { File, ListFilter, PlusCircle } from "lucide-react";
-import { unstable_noStore as noStore, revalidatePath } from "next/cache";
 import Link from "next/link";
 import ProductTable from "./_components/ProductTable";
 
 export default async function Products() {
-  revalidatePath("/dashboard/products", "layout");
-  noStore();
-
   return (
     <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
       <Tabs defaultValue="all">

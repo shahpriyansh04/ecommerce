@@ -29,7 +29,7 @@ export const createProduct = mutation({
   },
 });
 
-export const getProducts = query({
+export const getUserProducts = query({
   args: {
     userId: v.optional(v.string()),
     status: v.string(),
@@ -70,6 +70,41 @@ export const deleteProduct = mutation({
     );
     await ctx.db.delete(args.productId);
 
+    return document;
+  },
+});
+
+export const getProductById = query({
+  args: {
+    productId: v.id("products"),
+  },
+  async handler(ctx, args) {
+    const product = await ctx.db
+      .query("products")
+      .filter((q) => q.eq(q.field("_id"), args.productId))
+      .collect();
+    if (product.length === 0) {
+      throw new Error("Product not found");
+    }
+    return product[0];
+  },
+});
+
+export const update = mutation({
+  args: {
+    productId: v.id("products"),
+    name: v.optional(v.string()),
+    price: v.optional(v.number()),
+    stock: v.optional(v.number()),
+    description: v.optional(v.string()),
+    media: v.optional(v.array(v.string())),
+    category: v.optional(v.string()),
+    subcategory: v.optional(v.string()),
+    status: v.optional(v.string()),
+  },
+  async handler(ctx, args) {
+    const { productId, ...product } = args;
+    const document = await ctx.db.patch(args.productId, product);
     return document;
   },
 });

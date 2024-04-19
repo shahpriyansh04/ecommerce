@@ -38,7 +38,7 @@ export default function Navbar() {
 
     return (
       <React.Fragment key={href}>
-        <BreadcrumbItem className="text-lg">
+        <BreadcrumbItem className="text-md">
           {!isCurrentPage ? (
             <BreadcrumbLink asChild>
               <Link href={href} className={isCurrentPage ? "text-primary" : ""}>

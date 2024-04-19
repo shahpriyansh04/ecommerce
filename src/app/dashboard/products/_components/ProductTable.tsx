@@ -36,7 +36,7 @@ export default async function ProductTable({
   const user = await currentUser();
 
   const client = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-  const products = await client.query(api.products.getProducts, {
+  const products = await client.query(api.products.getUserProducts, {
     userId: user?.id,
     status,
   });

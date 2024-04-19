@@ -17,6 +17,8 @@ import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../../../../convex/_generated/api";
 import revalidateUserPath from "../action";
 import ProductTableItemDropdown from "./ProductTableItemDropdown";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default async function ProductTableItem(product: Doc<"products">) {
   const client = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
@@ -35,9 +37,12 @@ export default async function ProductTableItem(product: Doc<"products">) {
           width="64"
         />
       </TableCell>
-      <TableCell className="font-medium">{product.name}</TableCell>
+
+      <TableCell className="font-medium hover:underline hover:cursor-pointer">
+        <Link href={`/dashboard/products/${product._id}`}>{product.name}</Link>
+      </TableCell>
       <TableCell>
-        <Badge variant="outline">Draft</Badge>
+        <Badge variant="outline">{product.status}</Badge>
       </TableCell>
       <TableCell className="hidden md:table-cell">${product.price}</TableCell>
       <TableCell className="hidden md:table-cell">{product.stock}</TableCell>
