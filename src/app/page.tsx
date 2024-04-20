@@ -16,7 +16,7 @@ export default async function Home() {
         <Navbar />
       </div>{" "}
       <hr />
-      <div className="px-20 py-12 grid grid-cols-4 gap-12">
+      <div className="px-16 py-12 grid grid-cols-4 gap-12">
         {products.map((product) => {
           return <ProductCard {...product} key={product._id} />;
         })}
