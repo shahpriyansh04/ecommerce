@@ -43,3 +43,46 @@ export const getCartItems = query({
     return cartItems;
   },
 });
+
+export const deleteFromCart = mutation({
+  args: {
+    cartId: v.id("cart"),
+  },
+  async handler(ctx, args) {
+    await ctx.db.delete(args.cartId);
+  },
+});
+
+export const increaseQuantity = mutation({
+  args: {
+    cartId: v.id("cart"),
+  },
+  async handler(ctx, args) {
+    const cartItem = await ctx.db.get(args.cartId);
+    if (!cartItem) {
+      throw new Error("Cart item not found");
+    }
+    await ctx.db.patch(args.cartId, {
+      quantity: cartItem.quantity + 1,
+    });
+  },
+});
+
+export const decreaseQuantity = mutation({
+  args: {
+    cartId: v.id("cart"),
+  },
+  async handler(ctx, args) {
+    const cartItem = await ctx.db.get(args.cartId);
+    if (!cartItem) {
+      throw new Error("Cart item not found");
+    }
+    if (cartItem.quantity === 1) {
+      await ctx.db.delete(args.cartId);
+    } else {
+      await ctx.db.patch(args.cartId, {
+        quantity: cartItem.quantity - 1,
+      });
+    }
+  },
+});

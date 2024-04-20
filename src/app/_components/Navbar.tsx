@@ -13,9 +13,11 @@ export default async function Navbar() {
     <header className="bg-white ">
       <div className="mx-auto  flex items-center justify-between">
         <div className="flex items-center">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 mr-10">
-            ACME
-          </h1>
+          <Link href="/">
+            <h1 className="text-3xl font-bold tracking-tight cursor-pointer text-gray-900 mr-10">
+              ACME
+            </h1>
+          </Link>
           <nav className="hidden md:flex space-x-10">
             <Link
               className="text-base font-medium text-gray-500 hover:text-gray-900"
