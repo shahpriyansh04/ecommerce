@@ -15,4 +15,9 @@ export default defineSchema({
     subcategory: v.optional(v.string()),
     status: v.string(),
   }),
+  cart: defineTable({
+    userId: v.string(),
+    productId: v.id("products"),
+    quantity: v.number(),
+  }),
 });

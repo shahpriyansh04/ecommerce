@@ -4,6 +4,7 @@ import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
 import { Search, ShoppingBag } from "lucide-react";
 import Link from "next/link";
+import Cart from "./Cart";
 
 export default async function Navbar() {
   const user = await currentUser();
@@ -18,7 +19,7 @@ export default async function Navbar() {
           <nav className="hidden md:flex space-x-10">
             <Link
               className="text-base font-medium text-gray-500 hover:text-gray-900"
-              href="#"
+              href="/"
             >
               All
             </Link>
@@ -54,12 +55,8 @@ export default async function Navbar() {
           <Link href="/dashboard">
             <Button variant={"link"}>Dashboard</Button>
           </Link>
-          <div className="relative mr-6">
-            <ShoppingBag className=" text-gray-600 w-6 h-6 " />
-            <span className="ml-1 text-gray-900 font-semibold absolute -bottom-2 text-sm right-0 bg-white rounded-full">
-              3
-            </span>
-          </div>
+          <Cart />
+
           {user ? (
             <UserButton afterSignOutUrl="/login" />
           ) : (

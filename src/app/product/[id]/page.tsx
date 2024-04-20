@@ -13,18 +13,36 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { currentUser } from "@clerk/nextjs";
+import { toast } from "sonner";
+import { revalidatePath } from "next/cache";
+import { useRouter } from "next/navigation";
+import Router from "next/router";
+import AddToCartButton from "@/app/_components/AddToCartButton";
 
 export default async function ProductPage({
   params,
 }: {
   params: { id: Id<"products"> };
 }) {
+  const user = await currentUser();
   const product = await client.query(api.products.getProductById, {
     productId: params.id,
   });
   const urls = await client.query(api.files.getFileUrls, {
     media: product.media,
   });
+  const handleAddToCart = async () => {
+    "use server";
+    const addToCart = await client.mutation(api.cart.addToCart, {
+      productId: product._id,
+      userId: user?.id as string,
+      quantity: 1,
+    });
+    console.log(addToCart);
+    revalidatePath("/");
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 md:px-6 py-12">
       <div className="grid md:grid-cols-2 gap-8">
@@ -82,7 +100,9 @@ export default async function ProductPage({
               that adds a modern and eye-catching touch to your ensemble.
             </p>
           </div>
-          <Button size="lg">Add to Cart</Button>
+          <form action={handleAddToCart}>
+            <AddToCartButton />
+          </form>
         </div>
       </div>
       <Separator className="my-12" />
