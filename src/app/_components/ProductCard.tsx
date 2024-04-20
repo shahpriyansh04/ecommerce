@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 
 export default async function ProductCard(product: Doc<"products">) {
   const urls = await client.query(api.files.getFileUrls, {
@@ -27,7 +28,11 @@ export default async function ProductCard(product: Doc<"products">) {
           </div>
         </CardHeader>
         <CardContent className="mt-2 py-4 px-3">
-          <p className="text-lg font-semibold">{product.name}</p>
+          <Link href={`/product/${product._id}`}>
+            <p className="text-lg font-semibold hover:underline transition duration-200 cursor-pointer">
+              {product.name}
+            </p>
+          </Link>
           <p className="text-sm">${product.price}</p>
         </CardContent>
       </Card>

@@ -1,0 +1,63 @@
+[
+  {
+    "category": "clothing",
+    "createdAt": "2024-04-20T08:15:42.123Z",
+    "description": "Comfortable cotton hoodie with stylish design.",
+    "isArchived": false,
+    "media": ["kg2987js6q82tk29vw3epaf4n1d2pjgxc8"],
+    "name": "Cozy Cotton Hoodie",
+    "price": 35,
+    "status": "active",
+    "stock": 50,
+    "subcategory": "hoodies",
+    "userId": "user_2cUnppup8RIwlhgKzehlwR6ngWL"
+  },
+  {
+    "category": "electronics",
+    "createdAt": "2024-04-20T08:17:55.789Z",
+    "description": "Advanced wireless headphones with noise-cancellation feature.",
+    "isArchived": false,
+    "media": ["kg2b89det19kbmfzmhj5haffr16qhk2e"],
+    "name": "Wireless Noise-Canceling Headphones",
+    "price": 120,
+    "status": "active",
+    "stock": 20,
+    "userId": "user_2cUnppup8RIwlhgKzehlwR6ngWL"
+  },
+  {
+    "category": "accessories",
+    "createdAt": "2024-04-20T08:20:11.456Z",
+    "description": "Classic leather wallet with multiple card slots and a cash pocket.",
+    "isArchived": false,
+    "media": ["kg2987js6q82tk29vw3epaf4n1d2pjgxc8"],
+    "name": "Leather Wallet",
+    "price": 50,
+    "status": "active",
+    "stock": 30,
+    "userId": "user_2cUnppup8RIwlhgKzehlwR6ngWL"
+  },
+  {
+    "category": "clothing",
+    "createdAt": "2024-04-20T08:22:27.890Z",
+    "description": "Lightweight and durable backpack for everyday use.",
+    "isArchived": false,
+    "media": ["kg2b89det19kbmfzmhj5haffr16qhk2e"],
+    "name": "Everyday Backpack",
+    "price": 40,
+    "status": "active",
+    "stock": 25,
+    "userId": "user_2cUnppup8RIwlhgKzehlwR6ngWL"
+  },
+  {
+    "category": "electronics",
+    "createdAt": "2024-04-20T08:25:39.234Z",
+    "description": "Compact and powerful portable charger with fast charging capabilities.",
+    "isArchived": false,
+    "media": ["kg2b89det19kbmfzmhj5haffr16qhk2e"],
+    "name": "Portable Power Bank",
+    "price": 25,
+    "status": "active",
+    "stock": 15,
+    "userId": "user_2cUnppup8RIwlhgKzehlwR6ngWL"
+  }
+]

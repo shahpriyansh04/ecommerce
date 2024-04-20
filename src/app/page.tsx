@@ -8,12 +8,13 @@ import revalidateUserPath from "./dashboard/products/action";
 export default async function Home() {
   revalidateUserPath();
   const products = await client.query(api.products.getProducts, {});
+  console.log(products);
 
   return (
     <div className="">
-      <div className="px-20 py-4">
+      <div className="px-16 py-4">
         <Navbar />
-      </div>
+      </div>{" "}
       <hr />
       <div className="px-20 py-12 grid grid-cols-4 gap-12">
         {products.map((product) => {

@@ -1,11 +1,8 @@
-/**
- * v0 by Vercel.
- * @see https://v0.dev/t/Oob46Q2LmqX
- * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
- */
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { SignInButton, UserButton, auth, currentUser } from "@clerk/nextjs";
-import { Microscope, Search, ShoppingBag, User } from "lucide-react";
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs/server";
+import { Search, ShoppingBag } from "lucide-react";
 import Link from "next/link";
 
 export default async function Navbar() {
@@ -54,13 +51,23 @@ export default async function Navbar() {
               type="text"
             />
           </div>
-          <div className="relative mx-6">
+          <Link href="/dashboard">
+            <Button variant={"link"}>Dashboard</Button>
+          </Link>
+          <div className="relative mr-6">
             <ShoppingBag className=" text-gray-600 w-6 h-6 " />
             <span className="ml-1 text-gray-900 font-semibold absolute -bottom-2 text-sm right-0 bg-white rounded-full">
               3
             </span>
           </div>
-          {user ? <UserButton /> : <SignInButton />}
+          {user ? (
+            <UserButton afterSignOutUrl="/login" />
+          ) : (
+            // <Link href="/login">
+            //   <Button>Login</Button>
+            // </Link>
+            <SignInButton />
+          )}
         </div>
       </div>
     </header>
