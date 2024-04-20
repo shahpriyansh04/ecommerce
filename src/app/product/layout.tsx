@@ -12,7 +12,7 @@ export default function DashboardLayout({
         <Navbar />
       </div>{" "}
       <hr />
-      <div className="px-20 py-12 grid grid-cols-4 gap-12 ">{children}</div>
+      <div className="px-20 py-12 ">{children}</div>
     </div>
   );
 }
