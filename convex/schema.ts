@@ -20,4 +20,10 @@ export default defineSchema({
     productId: v.id("products"),
     quantity: v.number(),
   }),
+  orders: defineTable({
+    userId: v.string(),
+    items: v.array(v.id("products")),
+    status: v.string(),
+    totalAmount: v.number(),
+  }),
 });

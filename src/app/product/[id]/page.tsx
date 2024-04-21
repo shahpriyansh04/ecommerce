@@ -16,7 +16,7 @@ import {
 import { currentUser } from "@clerk/nextjs";
 import { toast } from "sonner";
 import { revalidatePath } from "next/cache";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import Router from "next/router";
 import AddToCartButton from "@/app/_components/AddToCartButton";
 
@@ -40,7 +40,8 @@ export default async function ProductPage({
       quantity: 1,
     });
     console.log(addToCart);
-    revalidatePath("/");
+    revalidatePath("/cart");
+    redirect("/cart");
   };
 
   return (
