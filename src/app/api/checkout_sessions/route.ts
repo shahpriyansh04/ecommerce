@@ -25,7 +25,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
   }
 }
 
-export async function GET(context: { session_id: string }) {
+export async function GET(req: Request, context: { session_id: string }) {
   const session = await stripe.checkout.sessions.retrieve(context.session_id);
 
   return NextResponse.json({ session });
