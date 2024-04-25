@@ -116,7 +116,6 @@ export const getProducts = query({
       .filter((q) => q.eq(q.field("status"), "active"))
       .order("desc")
       .collect();
-    console.log(products);
 
     return products;
   },

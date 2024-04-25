@@ -39,7 +39,6 @@ export default async function ProductPage({
       userId: user?.id as string,
       quantity: 1,
     });
-    console.log(addToCart);
     revalidatePath("/cart");
     redirect("/cart");
   };

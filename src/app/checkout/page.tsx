@@ -1,4 +1,5 @@
 "use client";
+import { useUser } from "@clerk/nextjs";
 import {
   EmbeddedCheckout,
   EmbeddedCheckoutProvider,
@@ -12,12 +13,22 @@ const stripePromise = loadStripe(
 );
 export default function Checkout() {
   const searchParams = useSearchParams();
+  const { user } = useUser();
   const priceData = decodeURIComponent(searchParams.get("items") as string);
+  const productDetails = decodeURIComponent(
+    searchParams.get("productDetails") as string
+  );
+  console.log(JSON.parse(productDetails));
+
   const fetchClientSecret = useCallback(() => {
     // Create a Checkout Session
     return fetch("/api/checkout_sessions", {
       method: "POST",
-      body: JSON.stringify({ priceData: JSON.parse(priceData) }),
+      body: JSON.stringify({
+        priceData: JSON.parse(priceData),
+        userId: user?.id,
+        productDetails: JSON.parse(productDetails),
+      }),
     })
       .then((res) => {
         if (!res.ok) {

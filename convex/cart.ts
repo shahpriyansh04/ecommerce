@@ -86,3 +86,16 @@ export const decreaseQuantity = mutation({
     }
   },
 });
+
+export const deleteCart = mutation({
+  args: {
+    userId: v.string(),
+  },
+  async handler(ctx, args) {
+    const cartItems = await ctx.db
+      .query("cart")
+      .filter((q) => q.eq(q.field("userId"), args.userId))
+      .collect();
+    await Promise.all(cartItems.map((item) => ctx.db.delete(item._id)));
+  },
+});

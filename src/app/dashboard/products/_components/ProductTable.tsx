@@ -40,7 +40,6 @@ export default async function ProductTable({
     userId: user?.id,
     status,
   });
-  console.log(products);
 
   return (
     <Card x-chunk="dashboard-06-chunk-0">

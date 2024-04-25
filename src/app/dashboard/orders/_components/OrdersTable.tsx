@@ -28,8 +28,17 @@ import {
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import OrdersTableItem from "./OrdersTableItem";
+import { currentUser } from "@clerk/nextjs";
+import { api } from "../../../../../convex/_generated/api";
+import { client } from "@/lib/convex-client";
+import { clerkClient } from "@clerk/nextjs/server";
 
-export default function OrdersTable() {
+export default async function OrdersTable() {
+  const user = await currentUser();
+  const orders = await client.query(api.orders.getSellerOrders, {
+    sellerId: user?.id as string,
+  });
+
   return (
     <Tabs defaultValue="week">
       <div className="flex items-center">
@@ -70,24 +79,32 @@ export default function OrdersTable() {
           </CardHeader>
           <CardContent>
             <ScrollArea className="h-[420px]">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Customer</TableHead>
-                    <TableHead className="hidden sm:table-cell">Type</TableHead>
-                    <TableHead className="hidden sm:table-cell">
-                      Status
-                    </TableHead>
-                    <TableHead className="hidden md:table-cell">Date</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  <OrdersTableItem />
-                  <OrdersTableItem />
-                  <OrdersTableItem />
-                </TableBody>
-              </Table>
+              {orders && orders.length > 0 ? (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Customer</TableHead>
+                      <TableHead className="hidden sm:table-cell">
+                        Type
+                      </TableHead>
+                      <TableHead className="hidden sm:table-cell">
+                        Status
+                      </TableHead>
+                      <TableHead className="hidden md:table-cell">
+                        Date
+                      </TableHead>
+                      <TableHead className="text-right">Amount</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {orders.map((order) => (
+                      <OrdersTableItem order={order} />
+                    ))}
+                  </TableBody>
+                </Table>
+              ) : (
+                <p>You don't have any orders</p>
+              )}
             </ScrollArea>
           </CardContent>
         </Card>

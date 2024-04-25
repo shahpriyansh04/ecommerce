@@ -22,7 +22,12 @@ export default defineSchema({
   }),
   orders: defineTable({
     userId: v.string(),
-    items: v.array(v.id("products")),
+    details: v.array(
+      v.object({
+        itemId: v.id("products"),
+        sellerId: v.string(),
+      })
+    ),
     status: v.string(),
     totalAmount: v.number(),
   }),

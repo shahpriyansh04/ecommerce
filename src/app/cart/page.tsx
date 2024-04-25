@@ -56,7 +56,12 @@ export default async function CartPage() {
     quantity: item.quantity,
   }));
 
-  console.log(priceData);
+  const productDetails = cartItems.map((item) => ({
+    itemId: item._id,
+    sellerId: item.userId,
+  }));
+
+  console.log(productDetails);
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -153,7 +158,7 @@ export default async function CartPage() {
               "use server";
               //encode the priceData and redirect to checkout
               redirect(
-                `/checkout/?items=${encodeURIComponent(JSON.stringify(priceData))}`
+                `/checkout/?items=${encodeURIComponent(JSON.stringify(priceData))}&productDetails=${encodeURIComponent(JSON.stringify(productDetails))}`
               );
             }}
           >

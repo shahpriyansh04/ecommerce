@@ -8,7 +8,6 @@ import revalidateUserPath from "./dashboard/products/action";
 export default async function Home() {
   revalidateUserPath();
   const products = await client.query(api.products.getProducts, {});
-  console.log(products);
 
   return (
     <div className="">

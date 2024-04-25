@@ -4,16 +4,22 @@ import stripe from "@/lib/stripe";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   const headersList = headers();
-  const { priceData } = await req.json();
+  const { priceData, userId, productDetails } = await req.json();
+  console.log(productDetails);
+
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       ui_mode: "embedded",
       line_items: priceData,
       mode: "payment",
+      metadata: {
+        //pass user id and the product ids
+        userId: userId,
+        productDetails: JSON.stringify(productDetails),
+      },
       return_url: `${headersList.get("origin")}/checkout/success`,
     });
-    console.log(session);
 
     return NextResponse.json({
       sessionId: session.id,
